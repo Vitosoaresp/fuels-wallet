@@ -14,6 +14,9 @@ import type { Account } from '@fuel-wallet/types';
 import type { FC } from 'react';
 import { FuelAddress } from '~/systems/Account';
 
+import { BakoIdAvatar } from '~/systems/NameSystem/components/BakoIdAvatar';
+import NameSystemStorage from '~/systems/NameSystem/utils/storage';
+import { useNetworks } from '~/systems/Network';
 import { AccountItemLoader } from './AccountItemLoader';
 
 export type AccountItemProps = {
@@ -54,6 +57,7 @@ export const AccountItem: AccountItemComponent = ({
   onUpdate,
   css,
 }: AccountItemProps) => {
+  const { selectedNetwork } = useNetworks();
   if (isHidden) return null;
 
   function getRightEl() {
@@ -134,6 +138,11 @@ export const AccountItem: AccountItemComponent = ({
     return null;
   }
 
+  const bakoIdProfile = NameSystemStorage.getProfile(
+    account.address,
+    selectedNetwork?.chainId!
+  );
+
   return (
     <CardList.Item
       isActive={isCurrent}
@@ -144,10 +153,17 @@ export const AccountItem: AccountItemComponent = ({
       aria-label={account.name}
       data-compact={compact}
     >
-      <Avatar.Generated size={compact ? 'xsm' : 'md'} hash={account.address} />
+      {bakoIdProfile?.avatar ? (
+        <BakoIdAvatar src={bakoIdProfile.avatar} />
+      ) : (
+        <Avatar.Generated
+          size={compact ? 'xsm' : 'md'}
+          hash={account.address}
+        />
+      )}
       <Box.Flex className="wrapper" css={styles.content}>
         <Heading as="h6" css={styles.name}>
-          {account.name}
+          {bakoIdProfile?.name ? `@${bakoIdProfile.name}` : account.name}
         </Heading>
         <FuelAddress
           address={account.address}

@@ -7,15 +7,19 @@ import {
   IconButton,
   useFuelTheme,
 } from '@fuel-ui/react';
+import { AvatarLoading } from '../AvatarLoading';
 import { BakoIdAvatar } from '../BakoIdAvatar';
+import { DefaultBakoIdAvatar } from '../DefaultBakoIdAvatar';
 
 interface NameSystemAvatarProps
   extends Omit<FlexProps, 'onClick' | 'onSelect'> {
   resolver: string;
   onSelect?: (resolver: string) => void;
   onClear?: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   avatarSize?: AvatarProps['size'];
+  avatarUrl?: string | null;
+  isFetchingAvatar?: boolean;
 }
 
 export function NameSystemAvatar({
@@ -24,6 +28,8 @@ export function NameSystemAvatar({
   onClear,
   children,
   avatarSize = 'sm',
+  isFetchingAvatar = false,
+  avatarUrl,
   ...props
 }: NameSystemAvatarProps) {
   const { current } = useFuelTheme();
@@ -31,7 +37,17 @@ export function NameSystemAvatar({
   return (
     <Box.Flex onClick={() => onSelect?.(resolver)} css={styles.root} {...props}>
       <Box.Flex css={styles.content} data-theme={current}>
-        <BakoIdAvatar name={resolver ?? ''} size={avatarSize} />
+        {isFetchingAvatar && <AvatarLoading />}
+        {avatarUrl && !isFetchingAvatar && (
+          <BakoIdAvatar
+            alt={resolver ?? ''}
+            src={avatarUrl}
+            size={avatarSize}
+          />
+        )}
+        {!avatarUrl && !isFetchingAvatar && (
+          <DefaultBakoIdAvatar name={resolver ?? ''} size={avatarSize} />
+        )}
         {children}
       </Box.Flex>
       {onClear && (

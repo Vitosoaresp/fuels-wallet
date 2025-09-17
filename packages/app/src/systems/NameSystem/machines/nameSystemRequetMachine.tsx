@@ -178,10 +178,10 @@ export const nameSystemRequestMachine = createMachine(
         }
 
         const [name, avatar] = await Promise.all([
-          await NameSystemService.resolverAddress({ address, chainId }).then(
+          NameSystemService.resolverAddress({ address, chainId }).then(
             (resp) => resp.name
           ),
-          await NameSystemService.getBakoIdAvatar({
+          NameSystemService.getBakoIdAvatar({
             domain: address,
             chainId,
           }).then((res) => res.avatar),

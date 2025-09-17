@@ -1,5 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  Box,
+  Button,
+  Heading,
+  Icon,
+  Text,
+  Tooltip,
+} from '@fuel-ui/react';
 import type { AccountWithBalance } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 import { FuelAddress } from '~/systems/Account';
@@ -8,6 +16,9 @@ import { VisibilityButton } from '~/systems/Core';
 import { useAccounts } from '../../hooks';
 
 import { INTL_FORMATTER } from '~/systems/Asset/constants';
+import { AvatarLoading } from '~/systems/NameSystem/components/AvatarLoading';
+import { BakoIdAvatar } from '~/systems/NameSystem/components/BakoIdAvatar';
+import { useBakoIDAvatarRequest } from '~/systems/NameSystem/hooks/useBakoIDAvatarRequest';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -43,8 +54,10 @@ export function BalanceWidget({
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
   const totalBalanceInUsd = account?.totalBalanceInUsd ?? 0;
-
-  if (isLoading || !account) return <BalanceWidget.Loader />;
+  const { avatarUrl, isFetching, name } = useBakoIDAvatarRequest(
+    account?.address!
+  );
+  if (isLoading || !account || isFetching) return <BalanceWidget.Loader />;
 
   const totalValue = INTL_FORMATTER.format(totalBalanceInUsd);
 
@@ -52,19 +65,26 @@ export function BalanceWidget({
     <BalanceWidgetWrapper
       top={
         <>
-          <Avatar.Generated
-            size="sm"
-            hash={account?.address as string}
-            css={{ boxShadow: '$sm' }}
-          />
+          {isFetching && <AvatarLoading />}
+          {!isFetching && avatarUrl && (
+            <BakoIdAvatar src={avatarUrl} alt={account?.address} />
+          )}
+          {!isFetching && !avatarUrl && (
+            <Avatar.Generated
+              size="sm"
+              hash={account?.address as string}
+              css={{ boxShadow: '$sm' }}
+            />
+          )}
           <Box.Stack gap="$1" css={{ flex: 1, minWidth: 0 }}>
             <Heading
               as="h6"
               css={styles.name}
               aria-label={`${account.name} selected`}
             >
-              {account.name}
+              {name ? `@${name}` : account.name}
             </Heading>
+
             <FuelAddress
               address={account.address}
               css={styles.balanceAddress}

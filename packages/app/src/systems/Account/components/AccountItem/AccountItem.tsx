@@ -138,10 +138,9 @@ export const AccountItem: AccountItemComponent = ({
     return null;
   }
 
-  const bakoIdProfile = NameSystemStorage.getProfile(
-    account.address,
-    selectedNetwork?.chainId!
-  );
+  const bakoIdProfile = selectedNetwork?.chainId !== undefined
+    ? NameSystemStorage.getProfile(account.address, selectedNetwork.chainId)
+    : undefined;
 
   return (
     <CardList.Item

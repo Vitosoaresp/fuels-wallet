@@ -62,6 +62,7 @@ export type ContractCallMetadata = {
 export type SimplifiedAddress = {
   address: string;
   domain?: Maybe<string>;
+  avatar?: Maybe<string>;
   type: number; // 0 for contract, 1 for account
 };
 
@@ -124,6 +125,12 @@ export type OperationWithDomain = Operation & {
   to?: OperationTransactionAddress & {
     domain?: string | null;
     address?: string;
+    avatar?: string | null;
+  };
+  from?: OperationTransactionAddress & {
+    domain?: string | null;
+    address?: string;
+    avatar?: string | null;
   };
 };
 

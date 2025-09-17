@@ -5,12 +5,12 @@ import { useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
 import { isValidEthAddress } from '~/systems/Core';
+import { NameSystemAvatar } from '~/systems/NameSystem/components/NameSystemAvatar/NameSystemAvatar';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import { getOperationText } from '../../services/transformers/simplifyTransaction';
 import { type SimplifiedOperation, TxCategory } from '../../types';
 import { TxRecipientContractLogo } from '../TxRecipientCard/TxRecipientContractLogo';
 import { TxOperationAssets } from './TxOperationAssets';
-import { NameSystemAvatar } from '~/systems/NameSystem/components/NameSystemAvatar/NameSystemAvatar';
 
 export type TxOperationCardProps = {
   operation: SimplifiedOperation;
@@ -98,10 +98,8 @@ export function TxOperationCard({
               <NameSystemAvatar
                 resolver={operation?.from?.domain}
                 avatarSize={36}
-              >
-                {/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
-                <></>
-              </NameSystemAvatar>
+                avatarUrl={operation.from.avatar}
+              />
             ) : (
               <Avatar.Generated
                 role="img"
@@ -121,7 +119,7 @@ export function TxOperationCard({
           aria-label="From address"
         >
           <Text as="span" fontSize="sm" css={styles.name}>
-            {accountFrom?.name || 'Unknown'}
+            {operation?.from?.domain || accountFrom?.name || 'Unknown'}
           </Text>
           {isFromContract && (
             <Box css={styles.badge}>
@@ -177,10 +175,8 @@ export function TxOperationCard({
               <NameSystemAvatar
                 resolver={operation?.to?.domain}
                 avatarSize={36}
-              >
-                {/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
-                <></>
-              </NameSystemAvatar>
+                avatarUrl={operation.to.avatar}
+              />
             ) : (
               <Avatar.Generated
                 role="img"

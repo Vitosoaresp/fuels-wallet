@@ -9,7 +9,7 @@ export const getOperationsWithDomain = async (
   const currentNetwork = await NetworkService.getSelectedNetwork();
   const chainId = currentNetwork?.chainId;
 
-  if (chainId === undefined) {
+  if (chainId == null) {
     return operations;
   }
 

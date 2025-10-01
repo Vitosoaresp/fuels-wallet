@@ -292,34 +292,8 @@ export const accountsMachine = createMachine(
       >({
         showError: true,
         async fetch() {
-          const network = await NetworkService.getSelectedNetwork();
           const accounts = await AccountService.getAccounts();
           const { needsRecovery } = await AccountService.fetchRecoveryState();
-
-          const addresses = accounts.map((acc) => acc.address);
-
-          if (network) {
-            await Promise.all(
-              addresses.map(async (address) => {
-                const profileByStorage = NameSystemStorage.getProfile(
-                  address,
-                  network.chainId
-                );
-
-                if (profileByStorage) {
-                  return;
-                }
-
-                const { profile } = await NameSystemService.getBakoIdProfile({
-                  address,
-                  chainId: network.chainId,
-                });
-                if (profile) {
-                  NameSystemStorage.setProfile(profile, network.chainId);
-                }
-              })
-            );
-          }
 
           return {
             accounts,

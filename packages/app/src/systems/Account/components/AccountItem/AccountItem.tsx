@@ -14,9 +14,10 @@ import type { Account } from '@fuel-wallet/types';
 import type { FC } from 'react';
 import { FuelAddress } from '~/systems/Account';
 
+import { AvatarLoading } from '~/systems/NameSystem/components/AvatarLoading';
 import { BakoIdAvatar } from '~/systems/NameSystem/components/BakoIdAvatar';
-import NameSystemStorage from '~/systems/NameSystem/utils/storage';
-import { useNetworks } from '~/systems/Network';
+import { LoadingName } from '~/systems/NameSystem/components/LoadingName';
+import { useBakoIDRequest } from '~/systems/NameSystem/hooks/useBakoIDRequest';
 import { AccountItemLoader } from './AccountItemLoader';
 
 export type AccountItemProps = {
@@ -57,7 +58,7 @@ export const AccountItem: AccountItemComponent = ({
   onUpdate,
   css,
 }: AccountItemProps) => {
-  const { selectedNetwork } = useNetworks();
+  const { avatarUrl, name, isFetching } = useBakoIDRequest(account.address);
   if (isHidden) return null;
 
   function getRightEl() {
@@ -138,10 +139,6 @@ export const AccountItem: AccountItemComponent = ({
     return null;
   }
 
-  const bakoIdProfile = selectedNetwork?.chainId !== undefined
-    ? NameSystemStorage.getProfile(account.address, selectedNetwork.chainId)
-    : undefined;
-
   return (
     <CardList.Item
       isActive={isCurrent}
@@ -152,9 +149,9 @@ export const AccountItem: AccountItemComponent = ({
       aria-label={account.name}
       data-compact={compact}
     >
-      {bakoIdProfile?.avatar ? (
-        <BakoIdAvatar src={bakoIdProfile.avatar} />
-      ) : (
+      {isFetching && <AvatarLoading />}
+      {!isFetching && avatarUrl && <BakoIdAvatar src={avatarUrl} size={40} />}
+      {!isFetching && !avatarUrl && (
         <Avatar.Generated
           size={compact ? 'xsm' : 'md'}
           hash={account.address}
@@ -162,7 +159,11 @@ export const AccountItem: AccountItemComponent = ({
       )}
       <Box.Flex className="wrapper" css={styles.content}>
         <Heading as="h6" css={styles.name}>
-          {bakoIdProfile?.name ? `@${bakoIdProfile.name}` : account.name}
+          <LoadingName
+            name={name ? `@${name}` : null}
+            fallbackName={account.name}
+            isLoaded={!isFetching}
+          />
         </Heading>
         <FuelAddress
           address={account.address}

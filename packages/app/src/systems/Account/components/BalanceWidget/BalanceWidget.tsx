@@ -18,7 +18,7 @@ import { useAccounts } from '../../hooks';
 import { INTL_FORMATTER } from '~/systems/Asset/constants';
 import { AvatarLoading } from '~/systems/NameSystem/components/AvatarLoading';
 import { BakoIdAvatar } from '~/systems/NameSystem/components/BakoIdAvatar';
-import { useBakoIDAvatarRequest } from '~/systems/NameSystem/hooks/useBakoIDAvatarRequest';
+import { useBakoIDRequest } from '~/systems/NameSystem/hooks/useBakoIDRequest';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -54,9 +54,8 @@ export function BalanceWidget({
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
   const totalBalanceInUsd = account?.totalBalanceInUsd ?? 0;
-  const { avatarUrl, isFetching, name } = useBakoIDAvatarRequest(
-    account?.address!
-  );
+  const { avatarUrl, isFetching, name } = useBakoIDRequest(account?.address!);
+
   if (isLoading || !account || isFetching) return <BalanceWidget.Loader />;
 
   const totalValue = INTL_FORMATTER.format(totalBalanceInUsd);
@@ -65,11 +64,8 @@ export function BalanceWidget({
     <BalanceWidgetWrapper
       top={
         <>
-          {isFetching && <AvatarLoading />}
-          {!isFetching && avatarUrl && (
-            <BakoIdAvatar src={avatarUrl} alt={account?.address} />
-          )}
-          {!isFetching && !avatarUrl && (
+          {avatarUrl && <BakoIdAvatar src={avatarUrl} alt={account?.address} />}
+          {!avatarUrl && (
             <Avatar.Generated
               size="sm"
               hash={account?.address as string}

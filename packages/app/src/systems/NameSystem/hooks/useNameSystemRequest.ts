@@ -1,6 +1,5 @@
 import { useSelector } from '@xstate/react';
 import { Services, store } from '~/store';
-import type { NameSystemInput } from '~/systems/NameSystem/services';
 import { useNetworks } from '~/systems/Network';
 import type { NameSystemRequestState } from '../machines/nameSystemRequetMachine';
 
@@ -13,6 +12,12 @@ const selectors = {
   },
   isOpenDropdown(state: NameSystemRequestState) {
     return state.context.isDropdownOpen;
+  },
+  avatar(state: NameSystemRequestState) {
+    return state.context.avatar;
+  },
+  isFetchingAvatar(state: NameSystemRequestState) {
+    return state.context.isFetchingAvatar;
   },
 };
 
@@ -30,6 +35,8 @@ export function useNameSystemRequest() {
   const service = store.useService(Services.nameSystemRequest);
   const domain = useSelector(service, selectors.name);
   const address = useSelector(service, selectors.address);
+  const avatarUrl = useSelector(service, selectors.avatar);
+  const isFetchingAvatar = useSelector(service, selectors.isFetchingAvatar);
   const isOpenDropdown = useSelector(service, selectors.isOpenDropdown);
 
   function toggleDropdown(open: boolean) {
@@ -51,5 +58,7 @@ export function useNameSystemRequest() {
     address,
     toggleDropdown,
     isOpenDropdown,
+    avatarUrl,
+    isFetchingAvatar,
   };
 }

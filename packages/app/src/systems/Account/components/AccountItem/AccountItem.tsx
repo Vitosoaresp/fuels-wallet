@@ -14,6 +14,10 @@ import type { Account } from '@fuel-wallet/types';
 import type { FC } from 'react';
 import { FuelAddress } from '~/systems/Account';
 
+import { AvatarLoading } from '~/systems/NameSystem/components/AvatarLoading';
+import { BakoIdAvatar } from '~/systems/NameSystem/components/BakoIdAvatar';
+import { LoadingName } from '~/systems/NameSystem/components/LoadingName';
+import { useBakoIDRequest } from '~/systems/NameSystem/hooks/useBakoIDRequest';
 import { AccountItemLoader } from './AccountItemLoader';
 
 export type AccountItemProps = {
@@ -54,6 +58,7 @@ export const AccountItem: AccountItemComponent = ({
   onUpdate,
   css,
 }: AccountItemProps) => {
+  const { avatarUrl, name, isFetching } = useBakoIDRequest(account.address);
   if (isHidden) return null;
 
   function getRightEl() {
@@ -144,10 +149,21 @@ export const AccountItem: AccountItemComponent = ({
       aria-label={account.name}
       data-compact={compact}
     >
-      <Avatar.Generated size={compact ? 'xsm' : 'md'} hash={account.address} />
+      {isFetching && <AvatarLoading />}
+      {!isFetching && avatarUrl && <BakoIdAvatar src={avatarUrl} size={40} />}
+      {!isFetching && !avatarUrl && (
+        <Avatar.Generated
+          size={compact ? 'xsm' : 'md'}
+          hash={account.address}
+        />
+      )}
       <Box.Flex className="wrapper" css={styles.content}>
         <Heading as="h6" css={styles.name}>
-          {account.name}
+          <LoadingName
+            name={name ? `@${name}` : null}
+            fallbackName={account.name}
+            isLoaded={!isFetching}
+          />
         </Heading>
         <FuelAddress
           address={account.address}

@@ -6,6 +6,8 @@ import { store } from '~/store';
 import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
+import NameSystemService from '~/systems/NameSystem/services/nameSystem';
+import NameSystemStorage from '~/systems/NameSystem/utils/storage';
 import { AccountService } from '../services/account';
 import type { AccountInputs } from '../services/account';
 

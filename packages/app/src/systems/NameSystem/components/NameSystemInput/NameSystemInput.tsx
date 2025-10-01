@@ -33,8 +33,16 @@ export const NameSystemInput = forwardRef<
   const [status, setStatus] = useState<Status>('idle');
 
   const { resolver, isLoading } = useResolver();
-  const { isOpenDropdown, toggleDropdown, domain, address, reset, setDomain } =
-    useNameSystemRequest();
+  const {
+    isOpenDropdown,
+    toggleDropdown,
+    domain,
+    address,
+    reset,
+    setDomain,
+    avatarUrl,
+    isFetchingAvatar,
+  } = useNameSystemRequest();
 
   const isName = useMemo(() => isValidDomain(inputValue), [inputValue]);
 
@@ -128,6 +136,8 @@ export const NameSystemInput = forwardRef<
               resolver={address!}
               onClear={handleClear}
               className="input-name-system"
+              isFetchingAvatar={isFetchingAvatar}
+              avatarUrl={avatarUrl}
             >
               <Box.Flex direction="row" gap={2} align="center">
                 <Tooltip content={shortAddress(address ?? '')}>
@@ -162,7 +172,12 @@ export const NameSystemInput = forwardRef<
         css={styles.dropdownMenu}
       >
         <Dropdown.MenuItem css={styles.dropdownMenuItem} key={address}>
-          <NameSystemAvatar resolver={address!} onSelect={handleSelect}>
+          <NameSystemAvatar
+            resolver={address!}
+            onSelect={handleSelect}
+            isFetchingAvatar={isFetchingAvatar}
+            avatarUrl={avatarUrl}
+          >
             <Box.Flex direction="column">
               <Text css={styles.domainText} className="domain" fontSize="sm">
                 {domain}

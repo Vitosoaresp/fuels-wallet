@@ -76,9 +76,21 @@ function transformOperation(
   const operationType = getOperationType(operation);
   const baseOperation = {
     type: operationType,
-    from: from ? { address: from.address, type: from.type } : undefined,
+    from: from
+      ? {
+          address: from.address,
+          type: from.type,
+          domain: from.domain,
+          avatar: from.avatar,
+        }
+      : undefined,
     to: to
-      ? { address: to.address, type: to.type, domain: to.domain }
+      ? {
+          address: to.address,
+          type: to.type,
+          domain: to.domain,
+          avatar: to.avatar,
+        }
       : undefined,
     isFromCurrentAccount: currentAccount
       ? from?.address.toLowerCase() === currentAccount.toLowerCase()

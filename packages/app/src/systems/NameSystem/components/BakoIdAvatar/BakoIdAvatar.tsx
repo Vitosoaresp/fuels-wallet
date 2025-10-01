@@ -18,7 +18,10 @@ export const BakoIdAvatar = memo(
         style={size ? { width: size, height: size } : undefined}
         className="fuel_Avatar"
       >
-        <AvatarLoading style={{ display: isLoading ? 'block' : 'none' }} />
+        <AvatarLoading
+          className="avatar_loading"
+          style={{ display: isLoading ? 'block' : 'none' }}
+        />
         <Image
           src={src}
           alt={alt}
@@ -34,12 +37,17 @@ export const BakoIdAvatar = memo(
 
 const styles = {
   rootLoading: cssObj({
-    borderRadius: '$lg',
+    borderRadius: '$full',
     width: '$8',
     height: '$8',
+
+    '.avatar_loading': {
+      width: '$full',
+      height: '$full',
+    },
   }),
   bakoAvatar: cssObj({
-    borderRadius: '$lg',
+    borderRadius: '$full',
     width: '$full',
     height: '$full',
     objectFit: 'cover',

@@ -5,7 +5,7 @@ export const AvatarLoading = (props: BoxProps) => {
   return (
     <Box css={styles.root} {...props}>
       <ContentLoader className="loader">
-        <ContentLoader.Rect width={32} height={32} />
+        <ContentLoader.Rect width={'100%'} height={'100%'} />
       </ContentLoader>
     </Box>
   );
@@ -13,14 +13,14 @@ export const AvatarLoading = (props: BoxProps) => {
 
 const styles = {
   root: cssObj({
-    borderRadius: '$lg',
+    borderRadius: '$full',
     width: '$8',
     height: '$8',
 
     '.loader': {
-      borderRadius: '$lg',
-      width: '$8',
-      height: '$8',
+      borderRadius: '$full',
+      width: '$full',
+      height: '$full',
     },
   }),
 };

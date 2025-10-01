@@ -16,7 +16,7 @@ export const LoadingName = ({
     return (
       <Box css={styles.root}>
         <ContentLoader className="loader">
-          <ContentLoader.Rect width={100} height={20} />
+          <ContentLoader.Rect width={100} height={24} />
         </ContentLoader>
       </Box>
     );
@@ -29,7 +29,7 @@ const styles = {
   root: cssObj({
     borderRadius: '$md',
     width: '100px',
-    height: '20px',
+    height: '24px',
 
     '.loader': {
       borderRadius: '$md',
